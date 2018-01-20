@@ -263,6 +263,18 @@ class PrintingLabelZpl2(models.Model):
     def unlink_action(self):
         self.mapped('action_window_id').unlink()
 
+    @api.multi
+    def import_zpl2(self):
+        self.ensure_one()
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'wizard.import.zpl2',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_label_id': self.id},
+        }
+
     def _get_record(self):
         self.ensure_one()
         Obj = self.env[self.model_id.model]

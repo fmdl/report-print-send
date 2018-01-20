@@ -24,6 +24,7 @@ To configure this module, you need to:
 
 #. Go to *Settings > Printing > Labels > ZPL II*
 #. Create new labels
+#. Import ZPL2 code
 #. Use the Test Mode tab during the creation
 
 It's also possible to add a label printing wizard on any model by creating a new *ir.actions.act_window* record.
