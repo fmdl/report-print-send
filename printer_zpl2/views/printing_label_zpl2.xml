@@ -125,6 +125,19 @@
                                     </notebook>
                                 </form>
                             </field>
+                            <group string="Emulation" attrs="{'invisible':[('test_labelary_mode', '=', False)]}">
+                                <field name="labelary_image" widget="image" nolabel="1" force_save="1"/>
+                                <p class="oe_grey" colspan="4">
+                                    Note : It is an emulation from http://labelary.com/, the result on printer can be diffrent.
+                                </p>
+                            </group>
+                        </page>
+                        <page string="Test Mode">
+                            <group>
+                                <group>
+                                    <field name="test_labelary_mode"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
