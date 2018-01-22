@@ -49,7 +49,11 @@ class PrintingLabelZpl2(models.Model):
         default=True)
     action_window_id = fields.Many2one(
         comodel_name='ir.actions.act_window', string='Action', readonly=True)
+    test_print_mode = fields.Boolean(string='Mode Print')
     test_labelary_mode = fields.Boolean(string='Mode Labelary')
+    record_id = fields.Integer(string='Record ID', default=1)
+    printer_id = fields.Many2one(
+        comodel_name='printing.printer', string='Printer')
     labelary_image = fields.Binary(string='Image from Labelary', readonly=True)
     labelary_dpmm = fields.Selection(
         selection=[
@@ -242,8 +246,6 @@ class PrintingLabelZpl2(models.Model):
                 report=None, content=label_contents, print_opts={'raw': True})
         return True
 
-        return True
-
     def create_action(self):
         for label in self.filtered(lambda record: not record.action_window_id):
             label.action_window_id = self.env['ir.actions.act_window'].create({
@@ -260,6 +262,23 @@ class PrintingLabelZpl2(models.Model):
 
     def unlink_action(self):
         self.mapped('action_window_id').unlink()
+
+    def _get_record(self):
+        self.ensure_one()
+        Obj = self.env[self.model_id.model]
+        record = Obj.search([('id', '=', self.record_id)], limit=1)
+        if not record:
+            record = Obj.search([], limit=1, order='id desc')
+            self.record_id = record.id
+
+        return record
+
+    def print_test_label(self):
+        for label in self:
+            if label.test_print_mode and label.record_id and label.printer_id:
+                record = label._get_record()
+                if record:
+                    label.print_label(label.printer_id, record)
 
     @api.onchange(
         'record_id', 'labelary_dpmm', 'labelary_width', 'labelary_height',
