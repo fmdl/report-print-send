@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    Copyright 2016 SYLEAM
-    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
--->
+<!-- Copyright 2016 SYLEAM License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <record id="view_printing_label_zpl2_tree" model="ir.ui.view">
         <field name="model">printing.label.zpl2</field>
@@ -147,12 +144,15 @@
                             </group>
                             <group>
                                 <group>
-                                    <field name="record_id" context="{'select_model_id':model_id}" attrs="{'invisible':[('test_print_mode', '=', False), ('test_labelary_mode', '=', False)], 'required':['|', ('test_print_mode', '=', True), ('test_labelary_mode', '=', True)]}"/>
+                                    <field name="record_id" attrs="{'invisible':[('test_print_mode', '=', False), ('test_labelary_mode', '=', False)], 'required':['|', ('test_print_mode', '=', True), ('test_labelary_mode', '=', True)]}"/>
                                     <field name="printer_id" attrs="{'invisible':[('test_print_mode', '=', False)], 'required':[('test_print_mode', '=', True)]}"/>
                                     <field name="labelary_dpmm" attrs="{'invisible':[('test_labelary_mode', '=', False)], 'required':[('test_labelary_mode', '=', True)]}"/>
                                     <field name="labelary_width" attrs="{'invisible':[('test_labelary_mode', '=', False)], 'required':[('test_labelary_mode', '=', True)]}"/>
                                     <field name="labelary_height" attrs="{'invisible':[('test_labelary_mode', '=', False)], 'required':[('test_labelary_mode', '=', True)]}"/>
                                 </group>
+                            </group>
+                            <group string="Extra">
+                                <field name="extra" nolabel="1" widget="ace" options="{'mode': 'python'}" attrs="{'invisible':[('test_print_mode', '=', False), ('test_labelary_mode', '=', False)]}"/>
                             </group>
                         </page>
                     </notebook>

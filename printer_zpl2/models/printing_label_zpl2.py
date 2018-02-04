@@ -52,6 +52,7 @@ class PrintingLabelZpl2(models.Model):
     test_print_mode = fields.Boolean(string='Mode Print')
     test_labelary_mode = fields.Boolean(string='Mode Labelary')
     record_id = fields.Integer(string='Record ID', default=1)
+    extra = fields.Text(string="Extra", default='{}')
     printer_id = fields.Many2one(
         comodel_name='printing.printer', string='Printer')
     labelary_image = fields.Binary(string='Image from Labelary', readonly=True)
@@ -223,7 +224,7 @@ class PrintingLabelZpl2(models.Model):
 
             self._generate_zpl2_components_data(
                 label_data, record, page_number=page_number,
-                page_count=page_count)
+                page_count=page_count, **extra)
 
             # Restore printer's configuration and end the label
             if self.restore_saved_config:
@@ -290,7 +291,7 @@ class PrintingLabelZpl2(models.Model):
             if label.test_print_mode and label.record_id and label.printer_id:
                 record = label._get_record()
                 if record:
-                    label.print_label(label.printer_id, record)
+                    label.print_label(label.printer_id, record, safe_eval(label.extra, {'env': self.env}))
 
     @api.onchange(
         'record_id', 'labelary_dpmm', 'labelary_width', 'labelary_height',
@@ -312,7 +313,7 @@ class PrintingLabelZpl2(models.Model):
                 height = round(self.labelary_height / 25.4, 2)
                 url = url.format(
                     dpmm=self.labelary_dpmm, width=width, height=height)
-                zpl_file = self._generate_zpl2_data(record, labelary_emul=True)
+                zpl_file = self._generate_zpl2_data(record, labelary_emul=True, **safe_eval(self.extra, {'env': self.env}))
                 files = {'file': zpl_file}
                 headers = {'Accept': 'image/png'}
                 response = requests.post(
